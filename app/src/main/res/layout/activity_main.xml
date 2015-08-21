@@ -16,9 +16,24 @@
     </TimePicker>
     <Button
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:text="Get Time"
         android:id="@+id/button"
-        android:onClick="setAlarm"/>
+        android:onClick="getTime"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="Add alarm"
+        android:id="@+id/add"
+        android:onClick="addAlarm"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:id="@+id/cancel"
+        android:text="Cancel Alarm"
+        android:layout_weight="1"
+        android:onClick="cancelAlarm"/>
 
 </LinearLayout>

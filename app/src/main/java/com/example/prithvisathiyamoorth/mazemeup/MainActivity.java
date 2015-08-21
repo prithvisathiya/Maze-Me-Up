@@ -14,16 +14,22 @@ import android.view.View;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    private AlarmManager alarmManager;// =  (AlarmManager)getSystemService(ALARM_SERVICE);
+    private PendingIntent pendingIntent;
+    private ArrayList<PendingIntent> piList = new ArrayList<PendingIntent>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
 
     }
 
@@ -49,26 +55,34 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void gettime(View v) {
+    public void getTime(View v) {
         Calendar cal  = Calendar.getInstance();
-        Toast.makeText(this, System.currentTimeMillis()+"", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, cal.getTime()+"", Toast.LENGTH_SHORT).show();
     }
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void setAlarm(View v) {
-        AlarmManager alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
-        Intent myIntent =  new Intent(MainActivity.this, AlarmService.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(MainActivity.this, 0, myIntent, 0);
-
+    public void addAlarm(View v) {
         TimePicker tp = (TimePicker) findViewById(R.id.time);
-
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY, tp.getCurrentHour());
         calendar.set(Calendar.MINUTE, tp.getCurrentMinute());
         calendar.set(Calendar.SECOND, 0);
+
+        //alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
+
+        Intent myIntent =  new Intent(MainActivity.this, AlarmService.class);
+        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, piList.size(), myIntent, 0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        piList.add(pendingIntent);
         //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15*1000, pendingIntent);
         Toast.makeText(this, calendar.getTime()+"", Toast.LENGTH_SHORT).show();
+    }
+
+    public void cancelAlarm(View v) {
+        if (alarmManager != null) {
+            alarmManager.cancel(pendingIntent);
+            Toast.makeText(this, "Alarm canceled", Toast.LENGTH_SHORT).show();
+        }
     }
 }
