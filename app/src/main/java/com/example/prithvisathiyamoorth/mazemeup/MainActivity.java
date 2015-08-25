@@ -2,6 +2,7 @@ package com.example.prithvisathiyamoorth.mazemeup;
 
 import android.annotation.TargetApi;
 import android.app.AlarmManager;
+import android.app.ListActivity;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
@@ -11,6 +12,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -18,19 +21,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ListActivity {
 
-    private AlarmManager alarmManager;// =  (AlarmManager)getSystemService(ALARM_SERVICE);
-    private PendingIntent pendingIntent;
-    private ArrayList<PendingIntent> piList = new ArrayList<PendingIntent>();
-
+    private String[] listData = {"Test", "Test","Test","Test","Test"};
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
-
+        ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
+        ListView lv = (ListView) findViewById(R.id.alarmList);
+        lv.setAdapter(listAdapter);
     }
 
     @Override
@@ -51,38 +52,17 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+        else if (id == R.id.newAlarmMenu) {
+            return newAlarmFrag();
+        }
 
         return super.onOptionsItemSelected(item);
     }
 
-    public void getTime(View v) {
-        Calendar cal  = Calendar.getInstance();
-        Toast.makeText(this, cal.getTime()+"", Toast.LENGTH_SHORT).show();
+    private boolean newAlarmFrag() {
+        Intent intent = new Intent(this, NewAlarm.class);
+        startActivity(intent);
+        return true;
     }
 
-    @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void addAlarm(View v) {
-        TimePicker tp = (TimePicker) findViewById(R.id.time);
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY, tp.getCurrentHour());
-        calendar.set(Calendar.MINUTE, tp.getCurrentMinute());
-        calendar.set(Calendar.SECOND, 0);
-
-        //alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
-
-        Intent myIntent =  new Intent(MainActivity.this, AlarmService.class);
-        pendingIntent = PendingIntent.getBroadcast(MainActivity.this, piList.size(), myIntent, 0);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        piList.add(pendingIntent);
-        //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15*1000, pendingIntent);
-        Toast.makeText(this, calendar.getTime()+"", Toast.LENGTH_SHORT).show();
-    }
-
-    public void cancelAlarm(View v) {
-        if (alarmManager != null) {
-            alarmManager.cancel(pendingIntent);
-            Toast.makeText(this, "Alarm canceled", Toast.LENGTH_SHORT).show();
-        }
-    }
 }
