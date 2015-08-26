@@ -63,9 +63,18 @@ public class NewAlarm extends ActionBarActivity {
         TimePicker tp = (TimePicker) findViewById(R.id.time);
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
+
         calendar.set(Calendar.HOUR_OF_DAY, tp.getCurrentHour());
+
+        MainActivity.hrDataA.add(tp.getCurrentHour());
+
         calendar.set(Calendar.MINUTE, tp.getCurrentMinute());
+        MainActivity.minDataA.add(tp.getCurrentMinute());
+
         calendar.set(Calendar.SECOND, 0);
+
+        MainActivity.repeatedA.add("S  M   T   W   TH   F  S");
+        MainActivity.activeA.add(true);
 
         //alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
 
@@ -75,6 +84,7 @@ public class NewAlarm extends ActionBarActivity {
         piList.add(pendingIntent);
         //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15*1000, pendingIntent);
         Toast.makeText(this, calendar.getTime() + "", Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     public void cancelAlarm(View v) {

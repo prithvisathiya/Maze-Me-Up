@@ -5,10 +5,15 @@
 
     <item android:id="@+id/action_settings"
           android:title="settings"
+          android:icon="@android:drawable/ic_menu_preferences"
           app:showAsAction="always"/>
 
+    <!--<item android:id="@+id/refresh"-->
+          <!--android:title="REFRESH"-->
+          <!--app:showAsAction="always"/>-->
     <item android:id="@+id/newAlarmMenu"
         android:title="NEW"
+          android:icon="@android:drawable/ic_menu_add"
         app:showAsAction="always"/>
 
 </menu>

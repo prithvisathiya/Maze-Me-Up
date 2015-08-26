@@ -1,6 +1,7 @@
 package com.example.prithvisathiyamoorth.mazemeup;
 
 import android.annotation.TargetApi;
+import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.app.ListActivity;
 import android.app.PendingIntent;
@@ -10,6 +11,7 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,20 +31,41 @@ import java.util.Calendar;
 
 public class MainActivity extends ActionBarActivity {
 
-    private String[] listData = {"9:00", "10:00","1:30","5:30","6:15"};
+    private int[] hrData = {9, 10, 12, 4, 6, 7, 8};
+    private int[] minData = {30, 15, 45, 23, 00, 00, 15};
     private String[] repeated = {"S  M   T   W   TH   F  S",
             "S  M   T   W   TH   F  S",
             "S  M   T   W   TH   F  S",
             "S  M   T   W   TH   F  S",
+            "S  M   T   W   TH   F  S",
+            "S  M   T   W   TH   F  S",
             "S  M   T   W   TH   F  S"};
-    private Boolean[] active = {false, false, true, true, true};
+    private Boolean[] active = {false, true, false, false, true, true, true};
+
+    public static ArrayList<Integer> hrDataA = new ArrayList<Integer>();
+    public static ArrayList<Integer> minDataA = new ArrayList<Integer>();
+    public static ArrayList<String> repeatedA = new ArrayList<String>();
+    public static ArrayList<Boolean> activeA = new ArrayList<Boolean>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         //ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
-        AlarmListAdapter Adapter = new AlarmListAdapter(listData, repeated, active);
+        AlarmListAdapter Adapter = new AlarmListAdapter(hrDataA, minDataA, repeatedA, activeA);
+        ListView lv = (ListView) findViewById(R.id.alarmList);
+        lv.setAdapter(Adapter);
+
+
+        getSupportActionBar().setTitle("All Alarms");
+        //getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        AlarmListAdapter Adapter = new AlarmListAdapter(hrDataA, minDataA, repeatedA, activeA);
         ListView lv = (ListView) findViewById(R.id.alarmList);
         lv.setAdapter(Adapter);
     }
@@ -65,33 +88,57 @@ public class MainActivity extends ActionBarActivity {
         if (id == R.id.action_settings) {
             return true;
         }
+//        else if (id == R.id.refresh) {
+//            return refreshList();
+//        }
         else if (id == R.id.newAlarmMenu) {
-            return newAlarmFrag();
+            return newAlarm();
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-    private boolean newAlarmFrag() {
+    private boolean refreshList() {
+        AlarmListAdapter Adapter = new AlarmListAdapter(hrDataA, minDataA, repeatedA, activeA);
+        ListView lv = (ListView) findViewById(R.id.alarmList);
+        lv.setAdapter(Adapter);
+        return true;
+    }
+
+    private boolean newAlarm() {
         Intent intent = new Intent(this, NewAlarm.class);
         startActivity(intent);
         return true;
     }
 
     public class AlarmListAdapter extends BaseAdapter {
-        private String[] time;
+        private int[] hr;
+        private int[] min;
         private String[] repeatedDays;
         private Boolean[] active;
+
+        private ArrayList<Integer> hrA;
+        private ArrayList<Integer> minA;
+        private ArrayList<String> repeatedDaysA;
+        private ArrayList<Boolean> activeA;
         Context context;
-        public AlarmListAdapter(String[] t, String[] rD, Boolean[] a) {
-            time = t;
+        public AlarmListAdapter(int[] h, int[] m, String[] rD, Boolean[] a) {
+            hr = h;
+            min = m;
             repeatedDays = rD;
             active = a;
         }
 
+        public AlarmListAdapter(ArrayList<Integer> h, ArrayList<Integer> m, ArrayList<String> rD, ArrayList<Boolean> a) {
+            hrA = h;
+            minA = m;
+            repeatedDaysA = rD;
+            activeA = a;
+        }
+
         @Override
         public int getCount() {
-            return time.length;
+            return hrA.size();
         }
 
         @Override
@@ -116,9 +163,16 @@ public class MainActivity extends ActionBarActivity {
             days = (TextView) row.findViewById(R.id.repeat);
             cb = (CheckBox) row.findViewById(R.id.alarmActivated);
 
-            timeView.setText(time[position]);
-            days.setText(repeatedDays[position]);
-            cb.setChecked(active[position]);
+            if (minA.get(position) != 0) {
+                if (hrA.get(position) > 12)
+                    timeView.setText((hrA.get(position) - 12) + ":" + minA.get(position) + " PM");
+                else
+                    timeView.setText(hrA.get(position) + ":" + minA.get(position) + " AM");
+            }
+            else
+                timeView.setText(hrA.get(position) + ":00");
+            days.setText(repeatedDaysA.get(position));
+            cb.setChecked(activeA.get(position));
             return row;
         }
     }
