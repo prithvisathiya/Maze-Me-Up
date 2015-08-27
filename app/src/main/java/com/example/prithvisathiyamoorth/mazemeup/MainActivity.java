@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
@@ -47,12 +48,15 @@ public class MainActivity extends ActionBarActivity {
     public static ArrayList<String> repeatedA = new ArrayList<String>();
     public static ArrayList<Boolean> activeA = new ArrayList<Boolean>();
 
+    public static ArrayList<PendingIntent> piList = new ArrayList<PendingIntent>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //ArrayAdapter<String> listAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listData);
+        AlarmDBHelper helper = new AlarmDBHelper(this);
+        helper.getAllContacts();
         AlarmListAdapter Adapter = new AlarmListAdapter(hrDataA, minDataA, repeatedA, activeA);
         ListView lv = (ListView) findViewById(R.id.alarmList);
         lv.setAdapter(Adapter);
@@ -65,9 +69,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     public void onResume() {
         super.onResume();
+        AlarmDBHelper helper = new AlarmDBHelper(this);
+        hrDataA.clear();minDataA.clear();repeatedA.clear();activeA.clear();
+        helper.getAllContacts();
         AlarmListAdapter Adapter = new AlarmListAdapter(hrDataA, minDataA, repeatedA, activeA);
         ListView lv = (ListView) findViewById(R.id.alarmList);
         lv.setAdapter(Adapter);
+
     }
 
     @Override
@@ -86,13 +94,14 @@ public class MainActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Toast.makeText(this, hrDataA.size()+"", Toast.LENGTH_SHORT).show();
             return true;
         }
 //        else if (id == R.id.refresh) {
 //            return refreshList();
 //        }
         else if (id == R.id.newAlarmMenu) {
-            return newAlarm();
+            return newAlarmActivity();
         }
 
         return super.onOptionsItemSelected(item);
@@ -105,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
-    private boolean newAlarm() {
+    private boolean newAlarmActivity() {
         Intent intent = new Intent(this, NewAlarm.class);
         startActivity(intent);
         return true;
@@ -163,16 +172,19 @@ public class MainActivity extends ActionBarActivity {
             days = (TextView) row.findViewById(R.id.repeat);
             cb = (CheckBox) row.findViewById(R.id.alarmActivated);
 
-            if (minA.get(position) != 0) {
+            if (minA.get(position) == 0) {
+                timeView.setText(hrA.get(position) + ":00");
+
+            } else if (minA.get(position) < 10)
+                timeView.setText(hrA.get(position) + ":0" + minA.get(position));
+            else {
                 if (hrA.get(position) > 12)
                     timeView.setText((hrA.get(position) - 12) + ":" + minA.get(position) + " PM");
                 else
                     timeView.setText(hrA.get(position) + ":" + minA.get(position) + " AM");
             }
-            else
-                timeView.setText(hrA.get(position) + ":00");
             days.setText(repeatedDaysA.get(position));
-            cb.setChecked(activeA.get(position));
+            cb.setChecked(!activeA.get(position));
             return row;
         }
     }

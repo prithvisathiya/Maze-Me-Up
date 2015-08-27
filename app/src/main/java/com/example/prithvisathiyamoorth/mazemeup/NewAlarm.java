@@ -21,12 +21,12 @@ public class NewAlarm extends ActionBarActivity {
 
     private AlarmManager alarmManager;// =  (AlarmManager)getSystemService(ALARM_SERVICE);
     private PendingIntent pendingIntent;
-    private ArrayList<PendingIntent> piList = new ArrayList<PendingIntent>();
+//    private ArrayList<PendingIntent> piList = new ArrayList<PendingIntent>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_new_alarm);
+        setContentView(R.layout.activity_alarm_new);
 
         alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
     }
@@ -65,23 +65,22 @@ public class NewAlarm extends ActionBarActivity {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         calendar.set(Calendar.HOUR_OF_DAY, tp.getCurrentHour());
-
-        MainActivity.hrDataA.add(tp.getCurrentHour());
-
         calendar.set(Calendar.MINUTE, tp.getCurrentMinute());
-        MainActivity.minDataA.add(tp.getCurrentMinute());
-
         calendar.set(Calendar.SECOND, 0);
 
-        MainActivity.repeatedA.add("S  M   T   W   TH   F  S");
-        MainActivity.activeA.add(true);
+//        MainActivity.hrDataA.add(tp.getCurrentHour());
+//        MainActivity.minDataA.add(tp.getCurrentMinute());
+//        MainActivity.repeatedA.add("S  M   T   W   TH   F  S");
+//        MainActivity.activeA.add(true);
 
+        AlarmDBHelper helper = new AlarmDBHelper(this);
+        helper.addAlarm(tp.getCurrentHour(), tp.getCurrentMinute(), true);
         //alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
 
         Intent myIntent =  new Intent(NewAlarm.this, AlarmService.class);
-        pendingIntent = PendingIntent.getBroadcast(NewAlarm.this, piList.size(), myIntent, 0);
+        pendingIntent = PendingIntent.getBroadcast(NewAlarm.this, MainActivity.piList.size(), myIntent, 0);
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        piList.add(pendingIntent);
+        MainActivity.piList.add(pendingIntent);
         //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15*1000, pendingIntent);
         Toast.makeText(this, calendar.getTime() + "", Toast.LENGTH_SHORT).show();
         finish();
