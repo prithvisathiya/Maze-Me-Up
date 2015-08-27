@@ -91,5 +91,6 @@ public class NewAlarm extends ActionBarActivity {
             alarmManager.cancel(pendingIntent);
             Toast.makeText(this, "Alarm canceled", Toast.LENGTH_SHORT).show();
         }
+        finish();
     }
 }

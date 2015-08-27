@@ -184,7 +184,7 @@ public class MainActivity extends ActionBarActivity {
                     timeView.setText(hrA.get(position) + ":" + minA.get(position) + " AM");
             }
             days.setText(repeatedDaysA.get(position));
-            cb.setChecked(!activeA.get(position));
+            cb.setChecked(activeA.get(position));
             return row;
         }
     }

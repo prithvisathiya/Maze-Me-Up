@@ -30,17 +30,12 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
                 + KEY_ID + " INTEGER PRIMARY KEY," + KEY_HOUR + " INTEGER,"
                 + KEY_MIN + " INTEGER," + KEY_ACTIVE + " TEXT);";
 
-//        String CREATE_CONTACTS_TABLE = "create table alarms(id integer primary key autoincrement,"
-//                + "hour integer"
-//                + "min integer"
-//                + "active text";
         db.execSQL(CREATE_CONTACTS_TABLE);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + ALARM_TABLE);
-
         // Create tables again
         onCreate(db);
     }
@@ -86,7 +81,7 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
                 //Contact contact = new Contact();
                 MainActivity.hrDataA.add(cursor.getInt(1));
                 MainActivity.minDataA.add(cursor.getInt(2));
-                if (cursor.getString(3) == "true")
+                if (cursor.getString(3) .equals("true"))
                     MainActivity.activeA.add(true);
                 else
                     MainActivity.activeA.add(false);
