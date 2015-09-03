@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -18,17 +20,34 @@ import java.util.Calendar;
 
 
 public class NewAlarm extends ActionBarActivity {
-
-    private AlarmManager alarmManager;// =  (AlarmManager)getSystemService(ALARM_SERVICE);
+    TimePicker tp;
+    EditText et;
+    CheckBox sun;
+    CheckBox mon;
+    CheckBox tue;
+    CheckBox wed;
+    CheckBox thu;
+    CheckBox fri;
+    CheckBox sat;
+    private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
-//    private ArrayList<PendingIntent> piList = new ArrayList<PendingIntent>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alarm_new);
 
+        tp = (TimePicker) findViewById(R.id.time);
+        et = (EditText) findViewById(R.id.alarmName);
+        sun = (CheckBox) findViewById(R.id.sunRepeat);
+        mon = (CheckBox) findViewById(R.id.monRepeat);
+        tue = (CheckBox) findViewById(R.id.tueRepeat);
+        wed = (CheckBox) findViewById(R.id.wedRepeat);
+        thu = (CheckBox) findViewById(R.id.thuRepeat);
+        fri = (CheckBox) findViewById(R.id.friRepeat);
+        sat = (CheckBox) findViewById(R.id.satRepeat);
         alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
+
     }
 
     @Override
@@ -60,37 +79,50 @@ public class NewAlarm extends ActionBarActivity {
 
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public void addAlarm(View v) {
-        TimePicker tp = (TimePicker) findViewById(R.id.time);
+        //GET TIME FORM TIME PICKER AND SET TO CAL
+        int hour = tp.getCurrentHour();
+        int min = tp.getCurrentMinute();
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-
-        calendar.set(Calendar.HOUR_OF_DAY, tp.getCurrentHour());
-        calendar.set(Calendar.MINUTE, tp.getCurrentMinute());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, min);
         calendar.set(Calendar.SECOND, 0);
+        if(calendar.compareTo(Calendar.getInstance()) <= 0)
+            calendar.add(Calendar.DATE, 1);
 
-//        MainActivity.hrDataA.add(tp.getCurrentHour());
-//        MainActivity.minDataA.add(tp.getCurrentMinute());
-//        MainActivity.repeatedA.add("S  M   T   W   TH   F  S");
-//        MainActivity.activeA.add(true);
+        //GET AND SET NAME
+        String name = et.getText().toString();
 
+        //GET AND SET THE REPEATING DAYS
+        ArrayList<Boolean> days = new ArrayList<Boolean>();
+        days.add(sun.isChecked());days.add(mon.isChecked());days.add(tue.isChecked());
+        days.add(wed.isChecked());days.add(thu.isChecked());days.add(fri.isChecked());days.add(sat.isChecked());
+
+        //ADD TO DATABASE
         AlarmDBHelper helper = new AlarmDBHelper(this);
-        helper.addAlarm(tp.getCurrentHour(), tp.getCurrentMinute(), true);
-        //alarmManager =  (AlarmManager)getSystemService(ALARM_SERVICE);
+        int lastpi = helper.getNextPI();
+        helper.addAlarm(hour, min, true, lastpi, name, days);
 
+        //SET ALARMM
         Intent myIntent =  new Intent(NewAlarm.this, AlarmService.class);
-        pendingIntent = PendingIntent.getBroadcast(NewAlarm.this, MainActivity.piList.size(), myIntent, 0);
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
-        MainActivity.piList.add(pendingIntent);
-        //alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 15*1000, pendingIntent);
-        Toast.makeText(this, calendar.getTime() + "", Toast.LENGTH_SHORT).show();
+        //if repeating
+        if(days.contains(true)) {
+            myIntent.putExtra("days", days);
+            pendingIntent = PendingIntent.getBroadcast(NewAlarm.this, lastpi, myIntent, 0);
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * 60 * 24, pendingIntent);
+        }
+        //if not repeating
+        else {
+            ArrayList<Boolean> alt = new ArrayList<Boolean>(); alt.add(true);
+            myIntent.putExtra("days", alt);
+            pendingIntent = PendingIntent.getBroadcast(NewAlarm.this, lastpi, myIntent, 0);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        }
+
         finish();
     }
 
     public void cancelAlarm(View v) {
-        if (alarmManager != null) {
-            alarmManager.cancel(pendingIntent);
-            Toast.makeText(this, "Alarm canceled", Toast.LENGTH_SHORT).show();
-        }
         finish();
     }
 }

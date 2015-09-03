@@ -6,4 +6,6 @@
     <string name="title_activity_new_alarm">NewAlarm</string>
     <string name="repeatMarginTop">7dp</string>
     <string name="title_activity_edit_alarm">EditAlarm</string>
+    <string name="title_activity_alarm_dialog">AlarmDialog</string>
+    <string name="title_activity_drag_ball">DragBallActivity</string>
 </resources>

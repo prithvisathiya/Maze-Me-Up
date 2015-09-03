@@ -3,6 +3,7 @@
     package="com.example.prithvisathiyamoorth.mazemeup" >
 
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -38,6 +39,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.example.prithvisathiyamoorth.mazemeup.MainActivity" />
         </activity>
+        <activity
+            android:name=".AlarmDialog"
+            android:label="@string/title_activity_alarm_dialog" >
+        </activity>
+        <activity
+            android:name=".SettingsActivity"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.prithvisathiyamoorth.mazemeup.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>

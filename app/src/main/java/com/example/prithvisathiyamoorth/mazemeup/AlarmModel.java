@@ -7,6 +7,7 @@ public class AlarmModel {
     private int hour;
     private int min;
     private boolean active;
+    private int pid;
 
     public AlarmModel(int hour, int min, boolean active) {
         this.hour = hour;
@@ -20,6 +21,10 @@ public class AlarmModel {
 
     public boolean isActive() {
         return active;
+    }
+
+    public int getPid() {
+        return pid;
     }
 
     public int getMin() {
@@ -36,5 +41,9 @@ public class AlarmModel {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public void setPid(int pid) {
+        this.pid = pid;
     }
 }
