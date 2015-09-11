@@ -109,7 +109,7 @@ public class AlarmListAdapter extends BaseAdapter {
                     if (repeatedDaysA.get(position).contains(true)) {
                         myIntent.putExtra("days", repeatedDaysA.get(position));
                         pi = PendingIntent.getBroadcast(mContext, pid, myIntent, PendingIntent.FLAG_CANCEL_CURRENT);
-                        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * 60 * 24, pi);
+                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pi);
                         Toast.makeText(mContext, "Alarm set repeating", Toast.LENGTH_SHORT).show();
                     }
                     //IF NOT REPEATING

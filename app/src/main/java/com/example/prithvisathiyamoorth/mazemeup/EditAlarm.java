@@ -135,7 +135,7 @@ public class EditAlarm extends ActionBarActivity {
             if(days.contains(true)){
                 myIntent.putExtra("days", days);
                 pendingIntent = PendingIntent.getBroadcast(EditAlarm.this, piId, myIntent, 0);
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * 60 * 24, pendingIntent);
+                alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
             }
             //if not repeating
             else {

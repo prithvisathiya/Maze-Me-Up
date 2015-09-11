@@ -15,7 +15,7 @@ import android.view.WindowManager;
 
 public class AlarmDialog extends Activity {
 
-    private Vibrator vibrator;
+    public static Vibrator vibrator;
 
 
     @Override
@@ -31,12 +31,15 @@ public class AlarmDialog extends Activity {
 
         //vibrate and show dialog
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(new long[]{0, 200, 400},0);
+        //vibrator.vibrate(new long[]{0, 200, 400},0);
         showDialog();
 
     }
 
+    @Override
+    public void onBackPressed() {
 
+    }
 
     private void showDialog() {
         //customize pop up dialog
@@ -48,7 +51,7 @@ public class AlarmDialog extends Activity {
                 .setPositiveButton("Play",new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog,int id) {
                         dialog.dismiss();
-                        vibrator.cancel();
+                        //vibrator.cancel();
                         //finish();
                     }
                 })
@@ -64,4 +67,5 @@ public class AlarmDialog extends Activity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
+
 }

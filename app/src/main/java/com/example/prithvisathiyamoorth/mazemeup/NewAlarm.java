@@ -5,6 +5,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Build;
+import android.security.KeyChain;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -109,7 +110,7 @@ public class NewAlarm extends ActionBarActivity {
         if(days.contains(true)) {
             myIntent.putExtra("days", days);
             pendingIntent = PendingIntent.getBroadcast(NewAlarm.this, lastpi, myIntent, 0);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000 * 60 * 60 * 24, pendingIntent);
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
         }
         //if not repeating
         else {
