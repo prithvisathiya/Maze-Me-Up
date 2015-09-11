@@ -2,15 +2,13 @@ package com.example.prithvisathiyamoorth.mazemeup;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Vibrator;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
 import android.view.WindowManager;
+
+import com.example.prithvisathiyamoorth.mazemeup.Levels.DragBallTest;
+import com.example.prithvisathiyamoorth.mazemeup.Levels.EasyLevel;
 
 
 public class AlarmDialog extends Activity {
@@ -21,8 +19,7 @@ public class AlarmDialog extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        DragBallTest test = new DragBallTest(this);
-        setContentView(test);
+        setContentView(new EasyLevel(this));
 
         //turn screen on
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);

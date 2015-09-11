@@ -1,4 +1,4 @@
-package com.example.prithvisathiyamoorth.mazemeup;
+package com.example.prithvisathiyamoorth.mazemeup.Levels;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,15 +15,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-/**
- * Created by prithvisathiyamoorth on 9/1/15.
- */
-public class DragBallTest extends View {
+import com.example.prithvisathiyamoorth.mazemeup.AlarmDialog;
+import com.example.prithvisathiyamoorth.mazemeup.R;
+
+
+
+public class HardLevel extends View {
 
     private Paint paint = new Paint();
     private int pathPaint, ballPaint, textPaint;
     private boolean move = false;
-    private int width;
     private Context mContext;
     private Canvas canvasNew;
     private int canvasHeight, canvasWidth;
@@ -38,15 +39,16 @@ public class DragBallTest extends View {
     private int dim=220;
     private float initX, initY;
 
-    public DragBallTest(Context context) {
+    public HardLevel(Context context) {
         super(context);
 
         mContext = context;
         //set all possible themes
-        int[] background = {R.drawable.black_pattern, R.drawable.dark_black_pattern, R.drawable.pink_pattern, R.drawable.wood2};
-        int[] pathColor = {Color.LTGRAY, Color.GRAY, Color.YELLOW, Color.WHITE};
-        int[] ballColor = {Color.RED, Color.WHITE, Color.RED, Color.GREEN};
-        int[] textColor = {Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN};
+        //APPROVED - black, dark-black, wood, purple feather
+        int[] background = {R.drawable.black_pattern, R.drawable.dark_black_pattern, R.drawable.blue_gradient_pattern, R.drawable.wood2, R.drawable.marron_pattern, R.drawable.purple_feather_pattern};
+        int[] pathColor = {Color.LTGRAY, Color.GRAY, Color.BLUE, Color.WHITE, Color.MAGENTA, Color.DKGRAY};
+        int[] ballColor = {Color.RED, Color.WHITE, Color.WHITE, Color.GREEN, Color.BLACK, Color.RED};
+        int[] textColor = {Color.GREEN,Color.GREEN,Color.GREEN,Color.GREEN, Color.GREEN, Color.GREEN};
         //choosing the theme
         int Min = 0, Max = background.length;
         int randNum = Min + (int)(Math.random() * ((Max - Min)));
@@ -127,6 +129,7 @@ public class DragBallTest extends View {
                         Toast.makeText(mContext, "out of bounds", Toast.LENGTH_SHORT).show();
                     }
                     else if (ballRect.contains(goal.centerX(), goal.centerY())) {
+                        ballRect.offset(-30, 0);
                         Toast.makeText(mContext, "Congratulations\n Get UP!", Toast.LENGTH_SHORT).show();
                         AlarmDialog.vibrator.cancel();
                         ((Activity) getContext()).finish();
