@@ -96,6 +96,8 @@ public class EasyLevel extends View {
         paint.setTextSize(40);
         canvas.drawText("Ball at (" + ballRect.exactCenterX() + "," + ballRect.exactCenterY() + ")", 30, 50, paint);
 
+        //paint.setColor();
+
         invalidate();
     }
 
